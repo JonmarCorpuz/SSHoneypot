@@ -1,0 +1,46 @@
+version: '3.7'
+
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.14
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+    ports:
+      - "9200:9200"
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.17.14
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:7.17.14
+    volumes:
+      - ./logstash:/usr/share/logstash/pipeline
+    depends_on:
+      - elasticsearch
+
+  cowrie:
+    image: cowrie/cowrie
+    ports:
+      - "2222:2222"
+    volumes:
+      - cowriedata:/cowrie/var/log/cowrie
+
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:7.17.14
+    user: root
+    volumes:
+      - ./filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+      - cowriedata:/cowrie/logs:ro
+    depends_on:
+      - logstash
+
+volumes:
+  esdata:
+  cowriedata:
