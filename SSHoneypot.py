@@ -42,8 +42,13 @@ def verify_dependencies():
 
         run_cmd('sudo docker --version')
 
-    def build_deployment():ls
-    
-        run_cmd('sudo docker-compose up -d')
+def main():
+
+    run_cmd('sudo mv pipeline.conf ./logstash/pipeline.conf')
+    run_cmd('sudo mv filebeat.yaml ./filebeat/filebeat.yaml')
+
+    run_cmd('sudo docker-compose up -d')
 
 # ==== MAIN BODY ========================================================
+if __name__ == "__main__":
+    main()

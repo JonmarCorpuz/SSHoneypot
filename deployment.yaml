@@ -36,7 +36,7 @@ services:
     image: docker.elastic.co/beats/filebeat:7.17.14
     user: root
     volumes:
-      - ./filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+      - ./filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yaml:ro
       - cowriedata:/cowrie/logs:ro
     depends_on:
       - logstash
