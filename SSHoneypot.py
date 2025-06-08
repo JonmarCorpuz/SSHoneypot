@@ -19,34 +19,13 @@ def run_cmd(cmd):
         print(f"Command failed: {cmd}")
         sys.exit(1)
 
-def verify_dependencies():
-    try:
-        run_cmd('sudo docker --version')
-
-    except subprocess.CalledProcessError:
-        run_cmd('sudo apt update')
-        run_cmd('sudo apt install -y ca-certificates curl gnupg lsb-release')
-
-        run_cmd('sudo mkdir -p /etc/apt/keyrings')
-        run_cmd('curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg')
-
-        run_cmd('echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] '
-                'https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | '
-                'sudo tee /etc/apt/sources.list.d/docker.list > /dev/null')
-
-        run_cmd('sudo apt update')
-        run_cmd('sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin')
-
-        run_cmd('sudo systemctl start docker')
-        run_cmd('sudo systemctl enable docker')
-
-        run_cmd('sudo docker --version')
-
 def main():
 
-    run_cmd('sudo mv pipeline.conf ./logstash/pipeline.conf')
-    run_cmd('sudo mv filebeat.yaml ./filebeat/filebeat.yaml')
+    run_cmd('mkdir logstash && sudo mv pipeline.conf ./logstash/pipeline.conf')
+    run_cmd('mkdir filebeat && sudo mv filebeat.yaml ./filebeat/filebeat.yaml')
 
+    run_cmd('sudo apt -y install docker docker-compose &> /dev/null')
+    
     run_cmd('sudo docker-compose up -d')
 
 # ==== MAIN BODY ========================================================
