@@ -36,14 +36,20 @@ def install_cowrie():
     #
     run_cmd('sudo su - cowrie -c "cd cowrie && sed -i "/^\[telnet\]/,/^\[/{s/enabled *= *false/enabled = true/}" etc/cowrie.cfg.dist"')
 
-#def install_elasticsearch():
-#    print("")
+def cron_job():
 
-#def install_kibana():
-#    print("")
+    #
+    run_cmd('loginAttempts_filepath=$(sudo find / -type f -name "loginAttempts.sh" 2>/dev/null | head -n 1)')
+
+    #
+    run_cmd('sudo apt -y install cron')
+    run_cmd('( crontab -l 2>/dev/null; echo "* * * * * $loginAttempts_filepath" ) | crontab -')
 
 def main():
+
     install_cowrie()
+
+    cron_job()
 
 # ==== MAIN BODY ========================================================
 if __name__ == "__main__":
