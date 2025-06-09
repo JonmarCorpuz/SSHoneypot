@@ -19,14 +19,14 @@ def run_cmd(cmd):
         print(f"Command failed: {cmd}")
         sys.exit(1)
 
-def main():
+def install_cowrie():
+    print("")
 
-    run_cmd('mkdir -p logstash/pipeline && sudo mv pipeline.conf ./logstash/pipeline.conf')
-    run_cmd('mkdir filebeat && sudo mv filebeat.yaml ./filebeat/filebeat.yaml')
+def install_elasticsearch():
+    print("")
 
-    run_cmd('sudo apt -y install docker docker-compose &> /dev/null')
-    
-    run_cmd('sudo docker-compose up -d')
+def install_kibana():
+    print("")
 
 # ==== MAIN BODY ========================================================
 if __name__ == "__main__":
