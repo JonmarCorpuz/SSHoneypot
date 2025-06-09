@@ -1,7 +1,0 @@
-filebeat.inputs:
-  - type: log
-    paths:
-      - /cowrie/logs/cowrie.json
-
-output.logstash:
-  hosts: ["logstash:5044"]
