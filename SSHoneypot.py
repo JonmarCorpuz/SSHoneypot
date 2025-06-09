@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 
 # ==== MODULES ==========================================================
+
+# Provides functions for interacting with the operating system
 import os
-import subprocess
-import sys
-
-# ==== VARIABLES ========================================================
-
+# Allows you to run shell commands and interact with system processes
+import subprocess 
+# Provides access to system-specific parameters and functions
+import sys        
 
 # ==== FUNCTIONS ========================================================
 
@@ -22,37 +23,27 @@ def run_cmd(cmd):
         print(f'Command failed: {cmd}')
         sys.exit(1)
 
-#def install_cowrie():
+# Function to install the cowrie honeypot
+def install_cowrie():
 
     # Install system dependencies
     run_cmd('sudo apt-get -y install git python3-pip python3-venv libssl-dev libffi-dev build-essential libpython3-dev python3-minimal authbind &> /dev/null')
 
-    # 
+    # Add a dedicated cowrie user without a password (for sandboxing the honeypot) 
     run_cmd('sudo adduser --disabled-password --gecos "" cowrie')
 
-    #
+    # Clone the Cowrie repository, set up Python virtual environment, install dependencies, and start Cowrie as the cowrie user
     run_cmd('sudo su - cowrie -c "git clone http://github.com/cowrie/cowrie && cd cowrie && python3 -m venv cowrie-env && source cowrie-env/bin/activate && python -m pip install --upgrade pip && python -m pip install --upgrade -r requirements.txt && python -m pip install --upgrade -r requirements-output.txt && bin/cowrie start"')
 
-    #
+    # Enable the Telnet honeypot in Cowrie's default configuration file
     run_cmd('sudo su - cowrie -c "cd cowrie && sed -i "/^\[telnet\]/,/^\[/{s/enabled *= *false/enabled = true/}" etc/cowrie.cfg.dist"')
-
-#def cron_job():
-
-    #
-#    run_cmd('loginAttempts_filepath=$(sudo find / -type f -name "loginAttempts.sh" 2>/dev/null | head -n 1)')
-
-    #
-#    run_cmd('sudo chmod +x $loginAttempts_filepath')
-    
-    #
-#    run_cmd('sudo apt -y install cron')
-#    run_cmd('( crontab -l 2>/dev/null; echo "* * * * * $loginAttempts_filepath" ) | crontab -')
 
 def main():
 
+    # Install cowrie
     install_cowrie()
 
-#    cron_job()
+    # ADD OTHER FUNCTIONS HERE
 
 # ==== MAIN BODY ========================================================
 if __name__ == "__main__":
