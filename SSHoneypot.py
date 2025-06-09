@@ -42,6 +42,9 @@ def cron_job():
     run_cmd('loginAttempts_filepath=$(sudo find / -type f -name "loginAttempts.sh" 2>/dev/null | head -n 1)')
 
     #
+    run_cmd('sudo chmod +x $loginAttempts_filepath')
+    
+    #
     run_cmd('sudo apt -y install cron')
     run_cmd('( crontab -l 2>/dev/null; echo "* * * * * $loginAttempts_filepath" ) | crontab -')
 
