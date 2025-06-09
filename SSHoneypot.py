@@ -23,8 +23,8 @@ def run_cmd(cmd):
         print(f'Command failed: {cmd}')
         sys.exit(1)
 
-# Function to install the cowrie honeypot
-def install_cowrie():
+# Function to install and configure the cowrie honeypot
+def cowrie():
 
     # Install system dependencies
     run_cmd('sudo apt-get -y install git python3-pip python3-venv libssl-dev libffi-dev build-essential libpython3-dev python3-minimal authbind &> /dev/null')
@@ -38,12 +38,24 @@ def install_cowrie():
     # Enable the Telnet honeypot in Cowrie's default configuration file
     run_cmd('sudo su - cowrie -c "cd cowrie && sed -i "/^\[telnet\]/,/^\[/{s/enabled *= *false/enabled = true/}" etc/cowrie.cfg.dist"')
 
+def elk_stack():
+
+    # Install Elasticsearch
+    run_cmd(' ')
+
+    # Install Logstash
+    run_cmd(' ')
+
+    # Install Kibana
+    run_cmd(' ')
+
 def main():
 
-    # Install cowrie
-    install_cowrie()
+    # Install and configure Cowrie
+    cowrie()
 
-    # ADD OTHER FUNCTIONS HERE
+    # Install and configure an ELK Stack
+    elk_stack()
 
 # ==== MAIN BODY ========================================================
 if __name__ == "__main__":
