@@ -21,7 +21,7 @@ def run_cmd(cmd):
 
 def main():
 
-    run_cmd('mkdir logstash && sudo mv pipeline.conf ./logstash/pipeline.conf')
+    run_cmd('mkdir -p logstash/pipeline && sudo mv pipeline.conf ./logstash/pipeline.conf')
     run_cmd('mkdir filebeat && sudo mv filebeat.yaml ./filebeat/filebeat.yaml')
 
     run_cmd('sudo apt -y install docker docker-compose &> /dev/null')
