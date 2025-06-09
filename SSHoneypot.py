@@ -29,32 +29,18 @@ def install_cowrie():
 
     # 
     run_cmd('sudo adduser --disabled-password --gecos "" cowrie')
-    run_cmd('sudo su - cowrie')
 
     #
-    run_cmd('git clone http://github.com/cowrie/cowrie && cd cowrie')
+    run_cmd('sudo su - cowrie -c "git clone http://github.com/cowrie/cowrie && cd cowrie && python3 -m venv cowrie-env && source cowrie-env/bin/activate && python -m pip install --upgrade pip && python -m pip install --upgrade -r requirements.txt && python -m pip install --upgrade -r requirements-output.txt && bin/cowrie start"')
 
     #
-    run_cmd('python3 -m venv cowrie-env')
-    run_cmd('source cowrie-env/bin/activate')
+    run_cmd('sudo su - cowrie -c "cd cowrie && sed -i "/^\[telnet\]/,/^\[/{s/enabled *= *false/enabled = true/}" etc/cowrie.cfg.dist"')
 
-    #
-    run_cmd('python -m pip install --upgrade pip')
-    run_cmd('python -m pip install --upgrade -r requirements.txt &> /dev/null')
-    run_cmd('python -m pip install --upgrade -r requirements-output.txt &> /dev/null')
+#def install_elasticsearch():
+#    print("")
 
-    #
-    run_cmd('bin/cowrie start')
-
-    #
-    run_cmd('sed -i "/^\[telnet\]/,/^\[/{s/enabled *= *false/enabled = true/}" etc/cowrie.cfg.dist')
-
-
-def install_elasticsearch():
-    print("")
-
-def install_kibana():
-    print("")
+#def install_kibana():
+#    print("")
 
 def main():
     install_cowrie()
