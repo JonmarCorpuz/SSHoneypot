@@ -1,17 +1,11 @@
 #!/usr/bin/env python3
 
 # ==== MODULES ==========================================================
-
-# Provides functions for interacting with the operating system
 import os
-# Allows you to run shell commands and interact with system processes
 import subprocess 
-# Provides access to system-specific parameters and functions
 import sys        
 
 # ==== FUNCTIONS ========================================================
-
-# Run a shell command (Exit if the command fails)
 def run_cmd(cmd):
 
     # Run the command passed as the argument
@@ -23,7 +17,6 @@ def run_cmd(cmd):
         print(f'Command failed: {cmd}')
         sys.exit(1)
 
-# Function to install and configure the cowrie honeypot
 def cowrie():
 
     # Install system dependencies
@@ -41,13 +34,29 @@ def cowrie():
 def elk_stack():
 
     # Install Elasticsearch
-    run_cmd(' ')
+    run_cmd('curl -fsSL https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo gpg --dearmor -o /usr/share/keyrings/elastic.gpg')
+    run_cmd('echo "deb [signed-by=/usr/share/keyrings/elastic.gpg] https://artifacts.elastic.co/packages/7.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-7.x.list')
+    run_cmd('sudo apt -y update')
+    run_cmd('sudo apt -y install elasticsearch')
+    run_cmd('sudo sed -i "s/^#\s*\(network\.host:\s*localhost\)/\1/" /etc/elasticsearch/elasticsearch.yml')
+    run_cmd('sudo systemctl start elasticsearch')
+    run_cmd('sudo systemctl enable elasticsearch')
 
     # Install Logstash
-    run_cmd(' ')
+    run_cmd('wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo gpg --dearmor -o /usr/share/keyrings/elastic-keyring.gpg')
+    run_cmd('sudo apt-get -y install apt-transport-https')
+    run_cmd('echo "deb [signed-by=/usr/share/keyrings/elastic-keyring.gpg] https://artifacts.elastic.co/packages/9.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-9.x.list')
+    run_cmd('sudo apt-get -y update && sudo apt-get -y install logstash')
 
     # Install Kibana
-    run_cmd(' ')
+    run_cmd('wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo gpg --dearmor -o /usr/share/keyrings/elasticsearch-keyring.gpg')
+    run_cmd('sudo apt-get -y install apt-transport-https')
+    run_cmd('echo "deb [signed-by=/usr/share/keyrings/elasticsearch-keyring.gpg] https://artifacts.elastic.co/packages/9.x/apt stable main" | sudo tee /etc/apt/sources.list.d/elastic-9.x.list')
+    run_cmd('sudo apt-get -y update && sudo apt-get -y install kibana')
+    run_cmd('sudo sed -i "s/^#\s*server\.host:\s*localhost/server.host: 0.0.0.0/" /etc/kibana/kibana.yml')
+    run_cmd('sudo /bin/systemctl daemon-reload')
+    run_cmd('sudo /bin/systemctl enable kibana.service')
+    run_cmd('sudo systemctl start kibana.service')
 
 def main():
 
