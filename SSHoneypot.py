@@ -83,7 +83,7 @@ def filebeat():
     run_cmd('sudo wget -qO —  https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -$ echo “deb https://artifacts.elastic.co/packages/7.x/apt stable main” | sudo tee -a /etc/apt/sources.list.d/elastic-7.x.list')
     run_cmd('sudo apt-get -y update')
     run_cmd('sudo apt-get -y install filebeat=7.9.2')
-    run_cmd('echo $filebeat_configuration >> /etc/filebeat/filebeat.yml')
+    run_cmd('sudo su -c "echo $filebeat_configuration >> /etc/filebeat/filebeat.yml"')
     run_cmd('sudo systemctl enable filebeat')
     run_cmd('sudo systemctl restart filebeat')
 
