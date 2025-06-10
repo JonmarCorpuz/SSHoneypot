@@ -48,6 +48,8 @@ def elk_stack():
     run_cmd('sudo apt-get -y install apt-transport-https')
     run_cmd('echo "deb [signed-by=/usr/share/keyrings/elastic-keyring.gpg] https://artifacts.elastic.co/packages/9.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-9.x.list')
     run_cmd('sudo apt-get -y update && sudo apt-get -y install logstash')
+    run_cmd('sudo systemctl enable logstash')
+    run_cmd('sudo systemctl start logstash')
 
     # Install Kibana
     run_cmd('wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo gpg --dearmor -o /usr/share/keyrings/elasticsearch-keyring.gpg')
