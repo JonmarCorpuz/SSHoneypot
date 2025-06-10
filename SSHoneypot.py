@@ -5,6 +5,22 @@ import os
 import subprocess 
 import sys        
 
+# ==== VARIABLES ========================================================
+
+filebeat_configuration="""
+# change to true the parameter filebeat.inputs
+filebeat.inputs:
+- type: log
+  enabled: true
+  paths:
+    - /home/cowrie/cowrie/var/log/cowrie/cowrie.json
+  fields:
+    event.type: cowrie
+# uncomment output.logstash and hosts, and set the values:
+output.logstash:
+ hosts: ["<logstash_ip>:5044"]
+"""
+
 # ==== FUNCTIONS ========================================================
 def run_cmd(cmd):
 
@@ -61,6 +77,17 @@ def elk_stack():
     run_cmd('sudo /bin/systemctl daemon-reload')
     run_cmd('sudo /bin/systemctl enable kibana.service')
     run_cmd('sudo systemctl start kibana.service')
+
+def filebeat():
+
+    run_cmd('sudo wget -qO —  https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -$ echo “deb https://artifacts.elastic.co/packages/7.x/apt stable main” | sudo tee -a /etc/apt/sources.list.d/elastic-7.x.list')
+    run_cmd('sudo apt-get -y update')
+    run_cmd('sudo apt-get -y install filebeat=7.9.2')
+    run_cmd('echo $filebeat_configuration >> /etc/filebeat/filebeat.yml')
+    run_cmd('sudo systemctl enable filebeat')
+    run_cmd('sudo systemctl restart filebeat')
+
+    run_cmd('sudo systemctl restart logstash')
 
 def main():
 
